@@ -12,14 +12,15 @@ const Hangman = () => {
     const [word, setWord] = React.useState(words[Math.floor(Math.random() * words.length)]);
     const [guesses, setGuesses] = React.useState('');
     const [wrongGuesses, setWrongGuesses] = React.useState(0);
-    const [correctGuesses, setCorrectGuesses] = React.useState([]);
+    const [holdGuesses, setHoldGuesses] = React.useState([]);
 
     const handleGuess = useCallback(() => {
             if (guesses.length === 0 ) return
             if (!word.includes(guesses)) {
                 setWrongGuesses((wrongGuesses) => wrongGuesses + 1);
+                setHoldGuesses((correctGuesses) => [...correctGuesses, guesses]);
             } else {
-                setCorrectGuesses((correctGuesses) => [...correctGuesses, guesses]);
+                setHoldGuesses((correctGuesses) => [...correctGuesses, guesses]);
             }
             setGuesses('')
         },
@@ -35,10 +36,8 @@ const Hangman = () => {
     const isWinner = word.split("").every((letter) => guesses.includes(letter));
 
     const hiddenWord = word.replace(/\w/g, (letter) =>
-        correctGuesses.includes(letter) ? letter : "_ "
+        holdGuesses.includes(letter) ? letter : "_ "
     );
-
-    console.log(correctGuesses);
 
 
     const isLoser = wrongGuesses >= 6;
@@ -53,7 +52,7 @@ const Hangman = () => {
                 {!isWinner && !isLoser && (
                     <>
                         {hiddenWord} <br/>
-                        Guesses: {correctGuesses.join("")} <br/>
+                        Guesses: {holdGuesses.join('')} <br/>
                         Wrong guesses: {wrongGuesses}
                     </>
                 )}
