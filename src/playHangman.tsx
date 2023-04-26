@@ -30,14 +30,15 @@ const Hangman = () => {
     const resetGame = useCallback(() => {
         setWord(words[Math.floor(Math.random() * words.length)]);
         setGuesses('');
+        setHoldGuesses([]);
         setWrongGuesses(0);
     }, []);
 
-    const isWinner = word.split("").every((letter) => guesses.includes(letter));
 
     const hiddenWord = word.replace(/\w/g, (letter) =>
         holdGuesses.includes(letter) ? letter : "_ "
     );
+    const isWinner = !hiddenWord.includes("_");
 
 
     const isLoser = wrongGuesses >= 6;
